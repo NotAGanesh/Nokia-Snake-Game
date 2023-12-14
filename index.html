@@ -76,6 +76,7 @@
       let score = 0;
 
       let food = { x: 200, y: 200 };
+      let gameInterval;
 
       function drawSnake() {
         ctx.fillStyle = "green";
@@ -132,8 +133,16 @@
         const head = snake[0];
 
         // Check if the head collides with the walls
-        if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
-          endGame();
+        if (head.x < 0) {
+          head.x = canvas.width - gridSize;
+        } else if (head.x >= canvas.width) {
+          head.x = 0;
+        }
+
+        if (head.y < 0) {
+          head.y = canvas.height - gridSize;
+        } else if (head.y >= canvas.height) {
+          head.y = 0;
         }
 
         // Check if the head collides with the snake body
@@ -145,6 +154,7 @@
       }
 
       function endGame() {
+        clearInterval(gameInterval);
         gameOverScreen.style.display = "block";
       }
 
@@ -156,6 +166,7 @@
         score = 0;
         scoreElement.textContent = score;
         generateFood();
+        gameInterval = setInterval(draw, 100);
       }
 
       function draw() {
@@ -184,33 +195,10 @@
       }
 
       generateFood();
-      setInterval(draw, 100);
+      gameInterval = setInterval(draw, 100);
 
       document.addEventListener("keydown", handleKeyPress);
       document.getElementById("restartButton").addEventListener("click", restartGame);
-      function checkCollision() {
-  const head = snake[0];
-
-  // Check if the head collides with the walls
-  if (head.x < 0) {
-    head.x = canvas.width - gridSize;
-  } else if (head.x >= canvas.width) {
-    head.x = 0;
-  }
-
-  if (head.y < 0) {
-    head.y = canvas.height - gridSize;
-  } else if (head.y >= canvas.height) {
-    head.y = 0;
-  }
-
-  // Check if the head collides with the snake body
-  for (let i = 1; i < snake.length; i++) {
-    if (head.x === snake[i].x && head.y === snake[i].y) {
-      endGame();
-    }
-  }
-}
     };
   </script>
 </body>
