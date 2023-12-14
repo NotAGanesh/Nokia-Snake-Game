@@ -64,7 +64,7 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    window.onload = () => {
       const canvas = document.getElementById("snakeCanvas");
       const ctx = canvas.getContext("2d");
       const gameOverScreen = document.getElementById("gameOverScreen");
@@ -119,27 +119,24 @@
       }
 
       function generateFood() {
-        const maxX = canvas.width - gridSize;
-        const maxY = canvas.height - gridSize;
+        const maxX = (canvas.width / gridSize) - 1;
+        const maxY = (canvas.height / gridSize) - 1;
 
         food = {
-          x: Math.floor(Math.random() * maxX / gridSize) * gridSize,
-          y: Math.floor(Math.random() * maxY / gridSize) * gridSize
+          x: Math.floor(Math.random() * maxX) * gridSize,
+          y: Math.floor(Math.random() * maxY) * gridSize
         };
       }
 
       function checkCollision() {
         const head = snake[0];
 
-        if (
-          head.x < 0 ||
-          head.x >= canvas.width ||
-          head.y < 0 ||
-          head.y >= canvas.height
-        ) {
+        // Check if the head collides with the walls
+        if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
           endGame();
         }
 
+        // Check if the head collides with the snake body
         for (let i = 1; i < snake.length; i++) {
           if (head.x === snake[i].x && head.y === snake[i].y) {
             endGame();
@@ -191,7 +188,30 @@
 
       document.addEventListener("keydown", handleKeyPress);
       document.getElementById("restartButton").addEventListener("click", restartGame);
-    });
+      function checkCollision() {
+  const head = snake[0];
+
+  // Check if the head collides with the walls
+  if (head.x < 0) {
+    head.x = canvas.width - gridSize;
+  } else if (head.x >= canvas.width) {
+    head.x = 0;
+  }
+
+  if (head.y < 0) {
+    head.y = canvas.height - gridSize;
+  } else if (head.y >= canvas.height) {
+    head.y = 0;
+  }
+
+  // Check if the head collides with the snake body
+  for (let i = 1; i < snake.length; i++) {
+    if (head.x === snake[i].x && head.y === snake[i].y) {
+      endGame();
+    }
+  }
+}
+    };
   </script>
 </body>
 </html>
